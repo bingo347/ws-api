@@ -5,7 +5,7 @@ const path = require('path');
 const webpack = require('webpack');
 
 const compiler = webpack({
-    entry: path.join(__dirname, 'lib/browser.js'),
+    entry: path.join(__dirname, 'lib/browser-client.js'),
     output: {
         filename: pkg.browser,
         path: path.join(__dirname),
