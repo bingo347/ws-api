@@ -1,1 +1,4 @@
 test
+package-lock.json
+.editorconfig
+.eslintrc.js
