@@ -2,3 +2,4 @@ test
 package-lock.json
 .editorconfig
 .eslintrc.js
+build.js

@@ -5,7 +5,8 @@
   "main": "index.js",
   "browser": "client.js",
   "scripts": {
-    "test": "node test/index.js"
+    "test": "node test/index.js",
+    "build": "node build.js"
   },
   "repository": {
     "type": "git",
