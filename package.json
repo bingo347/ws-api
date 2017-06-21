@@ -1,0 +1,22 @@
+{
+  "name": "ws-api",
+  "version": "1.0.0",
+  "description": "Api over websocket library",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.d-belyaev.ru:bingo/ws-api.git"
+  },
+  "keywords": [
+    "ws",
+    "websocket",
+    "api",
+    "rpc",
+    "events"
+  ],
+  "author": "Dmitriy Belyaev",
+  "license": "MIT"
+}
