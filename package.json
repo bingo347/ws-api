@@ -17,7 +17,8 @@
     "websocket",
     "api",
     "rpc",
-    "events"
+    "events",
+    "pubsub"
   ],
   "author": "Dmitriy Belyaev",
   "license": "MIT",
