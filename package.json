@@ -4,6 +4,9 @@
   "description": "Api on top of the websocket library",
   "main": "index.js",
   "browser": "client.js",
+  "engines": {
+    "node": ">=7.6.0"
+  },
   "scripts": {
     "test": "node test/index.js",
     "build": "node build.js"
