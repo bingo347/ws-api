@@ -10,7 +10,7 @@ npm install --save ws-api
 
 ## Browser bundle sizes
 
-- normal: 148.7kb
+- normal: 149.1kb
 - minified: 58.7kb
 - gziped: 17.5kb
 

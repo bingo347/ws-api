@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>window.module={exports:null};</script>
+        <script src="../client.js"></script>
+        <script>window.api=window.module.exports('ws://localhost:3000/');</script>
+    </head>
+    <body>
+        <pre></pre>
+        <input type="file">
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const pre = document.querySelector('pre');
+                const input = document.querySelector('input');
+                api.subscribe('session', payload => {
+                    pre.innerHTML = JSON.stringify(payload, null, 2);
+                });
+                input.addEventListener('change', () => {
+                    const file = input.files[0];
+                    if(!file) { return; }
+                    api.request('file', {name: file.name}, file);
+                });
+                void function e(test) {
+                    setTimeout(() => {
+                        api.request('set', {test}).then(e);
+                    }, 3000)
+                }(true);
+            });
+        </script>
+    </body>
+</html>
