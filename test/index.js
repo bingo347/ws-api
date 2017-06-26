@@ -6,12 +6,11 @@ const {Server} = require('..');
 
 const api = new Server({port: 3000});
 
-api.useOnInit(() => {
+api.use(ctx => {
     console.log('new session');
-});
-
-api.useOnDestroy(() => {
-    console.log('destroy session');
+    ctx.once('close', () => {
+        console.log('destroy session');
+    });
 });
 
 api.channel('session', (publish, ctx) => {
