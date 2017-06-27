@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@git.d-belyaev.ru:bingo/ws-api.git"
+    "url": "git@github.com:bingo347/ws-api.git"
   },
   "keywords": [
     "ws",
