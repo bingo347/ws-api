@@ -30,12 +30,13 @@ api.mount({
         Object.assign(this.session, payload);
         return this.session;
     },
-    file({name}, stream) {
+    async file({name}, stream) {
         console.log('request file ' + name);
         const outStream = fs.createWriteStream(__dirname + '/tmp/' + name);
         const p = new Promise(resolve => stream.once('end', resolve));
         stream.pipe(outStream);
-        return p.then(() => true);
+        await p;
+        return true;
     }
 });
 
