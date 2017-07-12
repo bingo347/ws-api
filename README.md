@@ -108,7 +108,7 @@ api.mount('test/', {
 
 ## Api docs
 
-see [docs](./docs.md)
+see [docs](https://github.com/bingo347/ws-api/blob/master/docs.md)
 
 ## License
 
