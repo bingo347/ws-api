@@ -1,7 +1,2 @@
-test
-package-lock.json
 .editorconfig
 .eslintrc.js
-build.js
-lib/browser-client.js
-lib/browser/*
