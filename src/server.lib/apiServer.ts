@@ -7,6 +7,7 @@ import {Middleware} from './middlewares';
 import {Procedures} from './procedures';
 import {Channels} from './channels';
 import {middlewares, procedures, channels} from './symbols';
+import {Store} from './helpers';
 
 export type ApiServerOptions<CodecContextType> = Omit<WebSocket.ServerOptions, 'server'> & {
     server?: WebSocket.Server | HTTPServer | HTTPSServer;
@@ -17,9 +18,9 @@ export type ApiServer<
     P extends Procedures<ProceduresBase>,
     C extends Channels<ChannelsBase>
 > = {
-    [middlewares]: Middleware[];
-    [procedures]: P;
-    [channels]: C;
+    [middlewares]: Store<Middleware[]>;
+    [procedures]: Store<P>;
+    [channels]: Store<C>;
     close(): Promise<void>;
 };
 
