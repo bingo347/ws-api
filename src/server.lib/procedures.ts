@@ -16,18 +16,18 @@ export type Procedures<ProceduresInfo extends ProceduresBase> = {
 
 export function mountProcedure<
     ProceduresInfo extends ProceduresBase,
-    Server extends ApiServer<Procedures<ProceduresInfo>, any>,
-    ProcedureName extends keyof ProceduresInfo
+    ProcedureName extends keyof ProceduresInfo,
+    Server extends ApiServer<Procedures<ProceduresInfo>, any> = ApiServer<Procedures<ProceduresInfo>, any>
 >(server: Server, procedureName: ProcedureName, procedure: Procedures<ProceduresInfo>[ProcedureName]): Server;
 export function mountProcedure<
     ProceduresInfo extends ProceduresBase,
-    Server extends ApiServer<Procedures<ProceduresInfo>, any>,
-    ProcedureName extends keyof ProceduresInfo
+    ProcedureName extends keyof ProceduresInfo,
+    Server extends ApiServer<Procedures<ProceduresInfo>, any> = ApiServer<Procedures<ProceduresInfo>, any>
 >(procedureName: ProcedureName, procedure: Procedures<ProceduresInfo>[ProcedureName]): (server: Server) => Server;
 export function mountProcedure<
     ProceduresInfo extends ProceduresBase,
-    Server extends ApiServer<Procedures<ProceduresInfo>, any>,
-    ProcedureName extends keyof ProceduresInfo
+    ProcedureName extends keyof ProceduresInfo,
+    Server extends ApiServer<Procedures<ProceduresInfo>, any> = ApiServer<Procedures<ProceduresInfo>, any>
 >(...args: [Server | ProcedureName, ProcedureName | Procedures<ProceduresInfo>[ProcedureName], Procedures<ProceduresInfo>[ProcedureName]?]): Server | ((server: Server) => Server) {
     // TODO:
     return void args as any as Server;
