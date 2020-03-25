@@ -44,7 +44,7 @@ function createProcedureBinder<
     return (server: Server) => {
         if(procedureName in server[procedures]()) {
             // eslint-disable-next-line fp/no-throw
-            throw new Error(`Cannot mount procedure \`${procedureName}\` to the some server twice`);
+            throw new Error(`Cannot mount procedure "${procedureName}" to the some server twice`);
         }
         server[procedures](prevProcedures => ({
             ...prevProcedures,

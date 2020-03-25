@@ -39,7 +39,7 @@ test('mountProcedure throws error when mount the some procedure name to the some
     mountProcedure<ProceduresInfo, 'procedure1'>(server, 'procedure1', procedure1);
     expect(() => (
         mountProcedure<ProceduresInfo, 'procedure1'>(server, 'procedure1', _ => `${_}`)
-    )).toThrow('Cannot mount procedure `procedure1` to the some server twice');
+    )).toThrow('Cannot mount procedure "procedure1" to the some server twice');
 });
 
 test('mountProcedure add procedure to procedures store as the some name', () => {
