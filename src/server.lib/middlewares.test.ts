@@ -33,11 +33,11 @@ test('useMiddleware add middleware to end of array in middlewares store', () => 
     const middleware2 = () => {};
 
     useMiddleware(server, middleware1);
-    expect(middlewareStore().length).toBe(1);
+    expect(middlewareStore()).toHaveLength(1);
     expect(middlewareStore()[0]).toBe(middleware1);
 
     useMiddleware(server, middleware2);
-    expect(middlewareStore().length).toBe(2);
+    expect(middlewareStore()).toHaveLength(2);
     expect(middlewareStore()[0]).toBe(middleware1);
     expect(middlewareStore()[1]).toBe(middleware2);
 });

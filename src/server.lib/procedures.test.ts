@@ -47,10 +47,10 @@ test('mountProcedure add procedure to procedures store as the some name', () => 
     const proceduresStore = server[procedures];
 
     mountProcedure<ProceduresInfo, 'procedure1'>(server, 'procedure1', procedure1);
-    expect(proceduresStore().procedure1).toBe(procedure1);
-    expect(proceduresStore().procedure2).toBe(void 0);
+    expect(proceduresStore()).toHaveProperty('procedure1', procedure1);
+    expect(proceduresStore()).not.toHaveProperty('procedure2');
 
     mountProcedure<ProceduresInfo, 'procedure2'>(server, 'procedure2', procedure2);
-    expect(proceduresStore().procedure1).toBe(procedure1);
-    expect(proceduresStore().procedure2).toBe(procedure2);
+    expect(proceduresStore()).toHaveProperty('procedure1', procedure1);
+    expect(proceduresStore()).toHaveProperty('procedure2', procedure2);
 });
