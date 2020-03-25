@@ -1,4 +1,5 @@
 import {Server as HTTPServer} from 'http';
+import {Server as HTTPSServer} from 'https';
 import {ExtensionCodec} from '@msgpack/msgpack';
 import WebSocket from 'ws';
 import {ProceduresBase, ChannelsBase} from '../shared/communications';
@@ -7,8 +8,8 @@ import {Procedures} from './procedures';
 import {Channels} from './channels';
 import {middlewares, procedures, channels} from './symbols';
 
-export type ApiServerOptions<CodecContextType> = {
-    server?: WebSocket.Server | HTTPServer;
+export type ApiServerOptions<CodecContextType> = Omit<WebSocket.ServerOptions, 'server'> & {
+    server?: WebSocket.Server | HTTPServer | HTTPSServer;
     extensionCodec?: ExtensionCodec<CodecContextType>;
 };
 
