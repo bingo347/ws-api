@@ -5,6 +5,7 @@
     ],
     "exclude": [
         "server.d.ts",
-        "src/client.ts"
+        "src/client.ts",
+        "**/*.test.ts"
     ]
 }

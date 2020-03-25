@@ -35,7 +35,8 @@ module.exports = {
             jest: true
         },
         rules: {
-            'fp/no-nil': 0
+            'fp/no-nil': 0,
+            '@typescript-eslint/no-empty-function': 0
         }
     }],
     rules: {
