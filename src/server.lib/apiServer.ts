@@ -19,8 +19,8 @@ export type ApiServer<
     C extends Channels<ChannelsBase>
 > = {
     [middlewares]: Store<Middleware[]>;
-    [procedures]: Store<P>;
-    [channels]: Store<C>;
+    [procedures]: Store<Partial<P>>;
+    [channels]: Store<Partial<C>>;
     close(): Promise<void>;
 };
 
