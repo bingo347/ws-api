@@ -1,8 +1,7 @@
 import {Readable as NodeReadableStream} from 'stream';
 import {ProceduresBase} from '../shared/communications';
 import {ApiServerContext} from './context';
-
-type ApiServer<P, C> = {p: P; c: C};
+import {ApiServer} from './apiServer';
 
 export type Procedure<Payload, Result> = (
     this: ApiServerContext,
@@ -17,17 +16,17 @@ export type Procedures<ProceduresInfo extends ProceduresBase> = {
 
 export function mountProcedure<
     ProceduresInfo extends ProceduresBase,
-    Server extends ApiServer<Procedures<ProceduresInfo>, unknown>,
+    Server extends ApiServer<Procedures<ProceduresInfo>, any>,
     ProcedureName extends keyof ProceduresInfo
 >(server: Server, procedureName: ProcedureName, procedure: Procedures<ProceduresInfo>[ProcedureName]): Server;
 export function mountProcedure<
     ProceduresInfo extends ProceduresBase,
-    Server extends ApiServer<Procedures<ProceduresInfo>, unknown>,
+    Server extends ApiServer<Procedures<ProceduresInfo>, any>,
     ProcedureName extends keyof ProceduresInfo
 >(procedureName: ProcedureName, procedure: Procedures<ProceduresInfo>[ProcedureName]): (server: Server) => Server;
 export function mountProcedure<
     ProceduresInfo extends ProceduresBase,
-    Server extends ApiServer<Procedures<ProceduresInfo>, unknown>,
+    Server extends ApiServer<Procedures<ProceduresInfo>, any>,
     ProcedureName extends keyof ProceduresInfo
 >(...args: [Server | ProcedureName, ProcedureName | Procedures<ProceduresInfo>[ProcedureName], Procedures<ProceduresInfo>[ProcedureName]?]): Server | ((server: Server) => Server) {
     // TODO:
