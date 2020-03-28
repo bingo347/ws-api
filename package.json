@@ -8,8 +8,7 @@
     "node": ">= 10"
   },
   "scripts": {
-    "build:client": "rollup -c",
-    "build:server": "tsc",
+    "build": "rollup -c",
     "test": "jest"
   },
   "repository": {
