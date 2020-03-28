@@ -16,8 +16,8 @@ type ChannelsInfo = {
 function createFakeServer(): ApiServer<any, Channels<ChannelsInfo>> {
     return {
         [middlewares]: createStore([]),
-        [procedures]: createStore({}),
-        [channels]: createStore(void 0),
+        [procedures]: createStore(void 0),
+        [channels]: createStore({}),
         close() {
             return Promise.resolve();
         }
