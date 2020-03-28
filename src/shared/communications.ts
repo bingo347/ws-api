@@ -142,3 +142,37 @@ export function createCommunication(vtag: T_CLIENT_ANY | T_SERVER_ANY, ...args: 
     }
     return {[tag]: vtag};
 }
+
+// eslint-disable-next-line max-lines-per-function
+export function packCommunication(communication: Communication): [T_CLIENT_ANY | T_SERVER_ANY, ...any[]] {
+    const vtag = communication[tag];
+    switch(vtag) {
+    case CLIENT_CALL: {
+        const c = communication as Communication1;
+        return [vtag, c.id, c.procedure, c.payload, c.hasUpload];
+    }
+    case CLIENT_UPLOAD: {
+        const c = communication as Communication2;
+        return [vtag, c.id, c.chunk];
+    }
+    case CLIENT_SUBSCRIBE:
+    case CLIENT_UNSUBSCRIBE: {
+        const c = communication as Communication3;
+        return [vtag, c.channel];
+    }
+    case SERVER_RESOLVE:
+    case SERVER_REJECT: {
+        const c = communication as Communication4;
+        return [vtag, c.id, c.result];
+    }
+    case SERVER_PUBLISH: {
+        const c = communication as Communication5;
+        return [vtag, c.channel, c.payload];
+    }
+    case ANY_MESSAGE: {
+        const c = communication as Communication6;
+        return [vtag, c.payload];
+    }
+    }
+    return [vtag];
+}
