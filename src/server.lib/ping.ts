@@ -4,6 +4,7 @@ import {
     PING
 } from '../shared/communications';
 import {noop, createStore, Store} from './helpers';
+import {pong} from './symbols';
 
 type PongAwaiter = {
     resolve(): void;
@@ -11,7 +12,6 @@ type PongAwaiter = {
 };
 type PromiseExecutor = (resolve: () => void, reject: (reason?: any) => void) => void;
 
-const pong = Symbol('pong');
 const getInitialPongAwaiterValue = (): PongAwaiter => ({resolve: noop, timer: void 0});
 const makePong = (pongAwaiter: Store<PongAwaiter>) => () => (
     pongAwaiter().resolve(),

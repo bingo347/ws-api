@@ -26,39 +26,38 @@ export type T_PONG                = typeof PONG;
 export type T_CLIENT = T_MESSAGE | T_PING | T_PONG | T_CLIENT_CALL | T_CLIENT_UPLOAD | T_CLIENT_SUBSCRIBE | T_CLIENT_UNSUBSCRIBE;
 export type T_SERVER = T_MESSAGE | T_PING | T_PONG | T_SERVER_RESOLVE | T_SERVER_REJECT | T_SERVER_PUBLISH;
 
-const tag = Symbol();
-type Communication1 = {
-    [tag]: T_CLIENT_CALL;
+export type Communication1 = {
+    tag: T_CLIENT_CALL;
     id: number;
     procedure: string;
     payload: unknown;
     hasUpload: boolean;
 };
-type Communication2 = {
-    [tag]: T_CLIENT_UPLOAD;
+export type Communication2 = {
+    tag: T_CLIENT_UPLOAD;
     id: number;
     chunk: Uint8Array;
 };
-type Communication3 = {
-    [tag]: T_CLIENT_SUBSCRIBE | T_CLIENT_UNSUBSCRIBE;
+export type Communication3 = {
+    tag: T_CLIENT_SUBSCRIBE | T_CLIENT_UNSUBSCRIBE;
     channel: string;
 };
-type Communication4 = {
-    [tag]: T_SERVER_RESOLVE | T_SERVER_REJECT;
+export type Communication4 = {
+    tag: T_SERVER_RESOLVE | T_SERVER_REJECT;
     id: number;
     result: unknown;
 };
-type Communication5 = {
-    [tag]: T_SERVER_PUBLISH;
+export type Communication5 = {
+    tag: T_SERVER_PUBLISH;
     channel: string;
     payload: unknown;
 };
-type Communication6 = {
-    [tag]: T_MESSAGE;
+export type Communication6 = {
+    tag: T_MESSAGE;
     payload: unknown;
 };
-type Communication7 = {
-    [tag]: T_PING | T_PONG;
+export type Communication7 = {
+    tag: T_PING | T_PONG;
 }
 export type Communication =
     | Communication1
@@ -70,7 +69,7 @@ export type Communication =
     | Communication7;
 
 export function isCommunication(v: unknown): v is Communication {
-    return typeof v === 'object' && v !== null && typeof (v as any)[tag] === 'number';
+    return typeof v === 'object' && v !== null && typeof (v as any).tag === 'number';
 }
 export function isPackedCommunication(v: unknown): v is [T_CLIENT | T_SERVER, ...any[]] {
     return Array.isArray(v) && (
@@ -87,7 +86,6 @@ export function isPackedCommunication(v: unknown): v is [T_CLIENT | T_SERVER, ..
     );
 }
 
-/* eslint-disable no-shadow */
 export function createCommunication(
     tag: T_CLIENT_CALL,
     id: Communication1['id'],
@@ -121,105 +119,105 @@ export function createCommunication(
 export function createCommunication(
     tag: T_PING | T_PONG
 ): Communication7;
-/* eslint-enable no-shadow */
+
 // eslint-disable-next-line max-lines-per-function
-export function createCommunication(vtag: T_CLIENT | T_SERVER, ...args: any[]): Communication {
-    switch(vtag) {
+export function createCommunication(tag: T_CLIENT | T_SERVER, ...args: any[]): Communication {
+    switch(tag) {
     case CLIENT_CALL: {
         const [id, procedure, payload, hasUpload = false] = args as [number, string, unknown, boolean?];
-        return {[tag]: vtag, id, procedure, payload, hasUpload};
+        return {tag, id, procedure, payload, hasUpload};
     }
     case CLIENT_UPLOAD: {
         const [id, chunk] = args as [number, Uint8Array];
-        return {[tag]: vtag, id, chunk};
+        return {tag, id, chunk};
     }
     case CLIENT_SUBSCRIBE:
     case CLIENT_UNSUBSCRIBE: {
         const [channel] = args as [string];
-        return {[tag]: vtag, channel};
+        return {tag, channel};
     }
     case SERVER_RESOLVE:
     case SERVER_REJECT: {
         const [id, result] = args as [number, unknown];
-        return {[tag]: vtag, id, result};
+        return {tag, id, result};
     }
     case SERVER_PUBLISH: {
         const [channel, payload] = args as [string, unknown];
-        return {[tag]: vtag, channel, payload};
+        return {tag, channel, payload};
     }
     case MESSAGE: {
         const [payload] = args as [unknown];
-        return {[tag]: vtag, payload};
+        return {tag, payload};
     }
     }
-    return {[tag]: vtag};
+    return {tag};
 }
 
 // eslint-disable-next-line max-lines-per-function
 export function packCommunication(communication: Communication): [T_CLIENT | T_SERVER, ...any[]] {
-    const vtag = communication[tag];
-    switch(vtag) {
+    const {tag} = communication;
+    switch(tag) {
     case CLIENT_CALL: {
         const c = communication as Communication1;
-        return [vtag, c.id, c.procedure, c.payload, c.hasUpload];
+        return [tag, c.id, c.procedure, c.payload, c.hasUpload];
     }
     case CLIENT_UPLOAD: {
         const c = communication as Communication2;
-        return [vtag, c.id, c.chunk];
+        return [tag, c.id, c.chunk];
     }
     case CLIENT_SUBSCRIBE:
     case CLIENT_UNSUBSCRIBE: {
         const c = communication as Communication3;
-        return [vtag, c.channel];
+        return [tag, c.channel];
     }
     case SERVER_RESOLVE:
     case SERVER_REJECT: {
         const c = communication as Communication4;
-        return [vtag, c.id, c.result];
+        return [tag, c.id, c.result];
     }
     case SERVER_PUBLISH: {
         const c = communication as Communication5;
-        return [vtag, c.channel, c.payload];
+        return [tag, c.channel, c.payload];
     }
     case MESSAGE: {
         const c = communication as Communication6;
-        return [vtag, c.payload];
+        return [tag, c.payload];
     }
     }
-    return [vtag];
+    return [tag];
 }
 
 // eslint-disable-next-line max-lines-per-function
 export function unpackCommunication(data: [T_CLIENT | T_SERVER, ...any[]]): void | Communication {
-    const [vtag, d1, d2] = data;
-    switch(vtag) {
+    const [tag, d1, d2] = data;
+    switch(tag) {
     case CLIENT_CALL:
         if(typeof d1 === 'number' && typeof d2 === 'string') {
-            return createCommunication(vtag, d1, d2, data[3], !!data[4]);
+            return createCommunication(tag, d1, d2, data[3], !!data[4]);
         }
         break;
     case CLIENT_UPLOAD:
         if(typeof d1 === 'number' && d2 instanceof Uint8Array) {
-            return createCommunication(vtag, d1, d2);
+            return createCommunication(tag, d1, d2);
         }
         break;
     case CLIENT_SUBSCRIBE:
     case CLIENT_UNSUBSCRIBE:
         if(typeof d1 === 'string') {
-            return createCommunication(vtag, d1);
+            return createCommunication(tag, d1);
         }
         break;
     case SERVER_RESOLVE:
     case SERVER_REJECT:
         if(typeof d1 === 'number') {
-            return createCommunication(vtag, d1, data[2]);
+            return createCommunication(tag, d1, data[2]);
         }
         break;
     case MESSAGE:
-        return createCommunication(vtag, d1);
+        return createCommunication(tag, d1);
     case PING:
     case PONG:
-        return createCommunication(vtag);
+        return createCommunication(tag);
     }
     return void 0;
 }
