@@ -3,7 +3,7 @@ import {
     createCommunication,
     PING
 } from '../shared/communications';
-import {createStore, noop, Store} from './helpers';
+import {noop, createStore, Store} from './helpers';
 
 type PongAwaiter = {
     resolve(): void;

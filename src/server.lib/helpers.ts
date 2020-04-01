@@ -35,3 +35,5 @@ export function createStore<T>(initValue: T) {
     }
     return store;
 }
+
+export const noop = () => void 0;
