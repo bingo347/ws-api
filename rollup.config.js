@@ -6,6 +6,7 @@ export default [{
         file: 'server.js',
         format: 'cjs'
     },
+    external: ['events', 'ws', '@msgpack/msgpack'],
     plugins: [
         tsPlugin()
     ]
@@ -15,6 +16,7 @@ export default [{
         file: 'client.js',
         format: 'es'
     },
+    external: ['@msgpack/msgpack'],
     plugins: [
         tsPlugin()
     ]
@@ -23,8 +25,12 @@ export default [{
     output: {
         file: 'client.umd-es5.js',
         format: 'umd',
-        name: 'ws-api'
+        name: 'wsApi',
+        globals: {
+            '@msgpack/msgpack': 'msgpack'
+        }
     },
+    external: ['@msgpack/msgpack'],
     plugins: [
         tsPlugin({
             tsconfig: conf => ({
