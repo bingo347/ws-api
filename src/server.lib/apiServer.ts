@@ -3,6 +3,7 @@ import {Server as HTTPSServer} from 'https';
 import WebSocket from 'ws';
 import {ProceduresBase, ChannelsBase} from '../shared/communications';
 import {PatchedExtensionCodec, defaultExtensionCodec, createEncoder, createDecoder} from '../shared/msgpack';
+import {Encoder, Decoder} from '../shared/msgpack-extensions';
 import {Middleware} from './middlewares';
 import {Procedures} from './procedures';
 import {Channels} from './channels';
@@ -52,8 +53,8 @@ function runServer<
 >(
     wss: WebSocket.Server,
     apiServer: ApiServer<ProceduresInfo, ChannelsInfo>,
-    encode: (value: unknown) => Uint8Array,
-    decode: (data: Uint8Array | ArrayBuffer) => unknown
+    encode: Encoder,
+    decode: Decoder
 ) {
     const newContextListener = makeNewContextListener(apiServer, encode, decode);
     return (wss
