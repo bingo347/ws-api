@@ -85,15 +85,14 @@ function wrapClose(wss: WebSocket.Server) {
 }
 
 function makeHandle(wss: WebSocket.Server) {
-    function handle(event: 'error', cb: (err: Error) => void): () => void;
-    function handle(event: 'close' | 'listening', cb: () => void): () => void;
-    function handle(event: 'headers', cb: (headers: string[], request: IncomingMessage) => void): () => void;
-    function handle(
-        event: 'error' | 'close' | 'listening' | 'headers',
-        cb: ((err: Error) => void) | (() => void) | ((headers: string[], request: IncomingMessage) => void)
-    ) {
-        wss.on(event, cb);
-        return () => wss.off(event, cb);
-    }
-    return handle;
+    type Events = {
+        error: (err: Error) => void;
+        close: () => void;
+        listening: () => void;
+        headers: (headers: string[], request: IncomingMessage) => void;
+    };
+    return <E extends keyof Events>(event: E, cb: Events[E]) => (
+        wss.on(event, cb),
+        () => wss.off(event, cb)
+    );
 }
