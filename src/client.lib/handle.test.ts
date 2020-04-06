@@ -31,6 +31,23 @@ test('Handle support many times call', () => {
     expect(fn2).toHaveBeenCalledTimes(1);
 });
 
+test('Handle return unsubscriber & it work', () => {
+    const [handle, emit] = createHandle<Events>();
+    const fn1 = jest.fn<void, []>();
+    const fn2 = jest.fn<void, []>();
+    const unsubscribe = handle('event1', fn1);
+    handle('event1', fn2);
+    expect(fn1).toHaveBeenCalledTimes(0);
+    expect(fn2).toHaveBeenCalledTimes(0);
+    emit('event1');
+    expect(fn1).toHaveBeenCalledTimes(1);
+    expect(fn2).toHaveBeenCalledTimes(1);
+    unsubscribe();
+    emit('event1');
+    expect(fn1).toHaveBeenCalledTimes(1);
+    expect(fn2).toHaveBeenCalledTimes(2);
+});
+
 test('Handle callback called with some args as called emit', () => {
     const [handle, emit] = createHandle<Events>();
     const fn2 = jest.fn<void, Parameters<Events['event2']>>();
