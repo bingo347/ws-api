@@ -37,7 +37,9 @@ export function createContextRunner<
         Promise.all([
             ctx.ping(),
             runMiddlewares(ctx, apiServer)
-        ]).then(() => handleCommunication(emitter, runContext(ctx, apiServer)))
+        ]).then(
+            () => handleCommunication(emitter, runContext(ctx, apiServer))
+        ).catch(e => emitter.emit('error', e))
     );
 }
 

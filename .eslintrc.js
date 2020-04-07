@@ -122,6 +122,7 @@ module.exports = {
         '@typescript-eslint/no-use-before-define': 0,
         '@typescript-eslint/ban-ts-ignore': 0,
         '@typescript-eslint/no-non-null-assertion': 0,
+        '@typescript-eslint/no-misused-promises': [2, {checksVoidReturn: false}],
         // array-func
         'array-func/from-map': 2,
         'array-func/no-unnecessary-this-arg': 2,
