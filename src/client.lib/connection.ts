@@ -1,20 +1,22 @@
 import {Handle, Emit, createHandle} from './handle';
-
-export const EVENT_OPEN = 'open';
-export const EVENT_CLOSE = 'close';
-export const EVENT_ERROR = 'error';
-export const EVENT_MESSAGE = 'message';
-export const EVENT_SEND = 'send';
+import {CloseFn, closeFromSocket} from './close';
+import {
+    EVENT_SEND,
+    EVENT_OPEN,
+    EVENT_CLOSE,
+    EVENT_ERROR,
+    EVENT_MESSAGE
+} from './events';
 
 type Fn<Args extends any[] = []> = (...args: Args) => void;
 
 export type InEvents = {
     [EVENT_SEND]: (data: ArrayBufferView) => void;
-    [EVENT_CLOSE]: (code: number, reason: string) => void;
+    [EVENT_CLOSE]: CloseFn;
 };
 export type OutEvents = {
     [EVENT_OPEN]: Fn;
-    [EVENT_CLOSE]: (code: number, reason: string) => void;
+    [EVENT_CLOSE]: CloseFn;
     [EVENT_ERROR]: Fn;
     [EVENT_MESSAGE]: (data: Uint8Array) => void;
 };
@@ -38,7 +40,7 @@ function connect(url: string, inHandle: Handle<InEvents>, outEmit: Emit<OutEvent
     // eslint-disable-next-line fp/no-mutation
     socket.binaryType = 'arraybuffer';
     const unhandleSend = inHandle(EVENT_SEND, data => socket.send(data.buffer));
-    const unhandleClose = inHandle(EVENT_CLOSE, (code, reason) => socket.close(code, reason));
+    const unhandleClose = inHandle(EVENT_CLOSE, closeFromSocket(socket));
     const reconnect = () => (unhandleSend(), unhandleClose(), connect(url, inHandle, outEmit));
     const silentClose = subscribeClose(socket, outEmit, reconnect);
     return (
