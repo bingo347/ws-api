@@ -26,47 +26,42 @@ export type T_PONG                = typeof PONG;
 export type T_CLIENT = T_MESSAGE | T_PING | T_PONG | T_CLIENT_CALL | T_CLIENT_UPLOAD | T_CLIENT_SUBSCRIBE | T_CLIENT_UNSUBSCRIBE;
 export type T_SERVER = T_MESSAGE | T_PING | T_PONG | T_SERVER_RESOLVE | T_SERVER_REJECT | T_SERVER_PUBLISH;
 
-export type Communication1 = {
-    tag: T_CLIENT_CALL;
-    id: number;
+type WithTag<Tag extends T_CLIENT | T_SERVER> = {tag: Tag};
+type WithID = {id: number};
+type WithPayload = {payload: unknown};
+
+export type ClientCallCommunication = WithTag<T_CLIENT_CALL> & WithID & WithPayload & {
     procedure: string;
-    payload: unknown;
     hasUpload: boolean;
 };
-export type Communication2 = {
-    tag: T_CLIENT_UPLOAD;
-    id: number;
+export type ClientUploadCommunication = WithTag<T_CLIENT_UPLOAD> & WithID & {
     chunk: Uint8Array;
 };
-export type Communication3 = {
-    tag: T_CLIENT_SUBSCRIBE | T_CLIENT_UNSUBSCRIBE;
+export type ClientSubscribeUnsubscribeCommunication = WithTag<T_CLIENT_SUBSCRIBE | T_CLIENT_UNSUBSCRIBE> & {
     channel: string;
 };
-export type Communication4 = {
-    tag: T_SERVER_RESOLVE | T_SERVER_REJECT;
-    id: number;
+export type ServerResolveRejectCommunication = WithTag<T_SERVER_RESOLVE | T_SERVER_REJECT> & WithID & {
     result: unknown;
 };
-export type Communication5 = {
-    tag: T_SERVER_PUBLISH;
+export type ServerPublishCommunication = WithTag<T_SERVER_PUBLISH> & WithPayload & {
     channel: string;
-    payload: unknown;
 };
-export type Communication6 = {
-    tag: T_MESSAGE;
-    payload: unknown;
-};
-export type Communication7 = {
-    tag: T_PING | T_PONG;
-}
-export type Communication =
-    | Communication1
-    | Communication2
-    | Communication3
-    | Communication4
-    | Communication5
-    | Communication6
-    | Communication7;
+export type MessageCommunication = WithTag<T_MESSAGE> & WithPayload;
+export type PingPongCommunication = WithTag<T_PING | T_PONG>;
+
+export type CommunicationByTag<Tag extends T_CLIENT | T_SERVER> = {
+    [CLIENT_CALL]: ClientCallCommunication;
+    [CLIENT_UPLOAD]: ClientUploadCommunication;
+    [CLIENT_SUBSCRIBE]: ClientSubscribeUnsubscribeCommunication;
+    [CLIENT_UNSUBSCRIBE]: ClientSubscribeUnsubscribeCommunication;
+    [SERVER_RESOLVE]: ServerResolveRejectCommunication;
+    [SERVER_REJECT]: ServerResolveRejectCommunication;
+    [SERVER_PUBLISH]: ServerPublishCommunication;
+    [MESSAGE]: MessageCommunication;
+    [PING]: PingPongCommunication;
+    [PONG]: PingPongCommunication;
+}[Tag];
+export type Communication = CommunicationByTag<T_CLIENT | T_SERVER>;
 
 export function isCommunication(v: unknown): v is Communication {
     return typeof v === 'object' && v !== null && typeof (v as any).tag === 'number';
@@ -88,37 +83,37 @@ export function isPackedCommunication(v: unknown): v is [T_CLIENT | T_SERVER, ..
 
 export function createCommunication(
     tag: T_CLIENT_CALL,
-    id: Communication1['id'],
-    procedure: Communication1['procedure'],
-    payload: Communication1['payload'],
-    hasUpload?: Communication1['hasUpload']
-): Communication1;
+    id: ClientCallCommunication['id'],
+    procedure: ClientCallCommunication['procedure'],
+    payload: ClientCallCommunication['payload'],
+    hasUpload?: ClientCallCommunication['hasUpload']
+): ClientCallCommunication;
 export function createCommunication(
     tag: T_CLIENT_UPLOAD,
-    id: Communication2['id'],
-    chunk: Communication2['chunk']
-): Communication2;
+    id: ClientUploadCommunication['id'],
+    chunk: ClientUploadCommunication['chunk']
+): ClientUploadCommunication;
 export function createCommunication(
     tag: T_CLIENT_SUBSCRIBE | T_CLIENT_UNSUBSCRIBE,
-    channel: Communication3['channel']
-): Communication3;
+    channel: ClientSubscribeUnsubscribeCommunication['channel']
+): ClientSubscribeUnsubscribeCommunication;
 export function createCommunication(
     tag: T_SERVER_RESOLVE | T_SERVER_REJECT,
-    id: Communication4['id'],
-    result: Communication4['result']
-): Communication4;
+    id: ServerResolveRejectCommunication['id'],
+    result: ServerResolveRejectCommunication['result']
+): ServerResolveRejectCommunication;
 export function createCommunication(
     tag: T_SERVER_PUBLISH,
-    channel: Communication5['channel'],
-    payload: Communication5['payload']
-): Communication5;
+    channel: ServerPublishCommunication['channel'],
+    payload: ServerPublishCommunication['payload']
+): ServerPublishCommunication;
 export function createCommunication(
     tag: T_MESSAGE,
-    payload: Communication6['payload']
-): Communication6;
+    payload: MessageCommunication['payload']
+): MessageCommunication;
 export function createCommunication(
     tag: T_PING | T_PONG
-): Communication7;
+): PingPongCommunication;
 
 // eslint-disable-next-line max-lines-per-function
 export function createCommunication(tag: T_CLIENT | T_SERVER, ...args: any[]): Communication {
@@ -158,29 +153,29 @@ export function packCommunication(communication: Communication): [T_CLIENT | T_S
     const {tag} = communication;
     switch(tag) {
     case CLIENT_CALL: {
-        const c = communication as Communication1;
+        const c = communication as ClientCallCommunication;
         return [tag, c.id, c.procedure, c.payload, c.hasUpload];
     }
     case CLIENT_UPLOAD: {
-        const c = communication as Communication2;
+        const c = communication as ClientUploadCommunication;
         return [tag, c.id, c.chunk];
     }
     case CLIENT_SUBSCRIBE:
     case CLIENT_UNSUBSCRIBE: {
-        const c = communication as Communication3;
+        const c = communication as ClientSubscribeUnsubscribeCommunication;
         return [tag, c.channel];
     }
     case SERVER_RESOLVE:
     case SERVER_REJECT: {
-        const c = communication as Communication4;
+        const c = communication as ServerResolveRejectCommunication;
         return [tag, c.id, c.result];
     }
     case SERVER_PUBLISH: {
-        const c = communication as Communication5;
+        const c = communication as ServerPublishCommunication;
         return [tag, c.channel, c.payload];
     }
     case MESSAGE: {
-        const c = communication as Communication6;
+        const c = communication as MessageCommunication;
         return [tag, c.payload];
     }
     }

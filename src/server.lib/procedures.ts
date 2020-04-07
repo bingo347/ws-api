@@ -1,5 +1,5 @@
 import {Readable as NodeReadableStream} from 'stream';
-import {ProceduresBase, Communication1} from '../shared/communications';
+import {ProceduresBase, ClientCallCommunication} from '../shared/communications';
 import {ApiServerContext} from './context';
 import {ApiServer} from './apiServer';
 import {normalizeArgs} from './helpers';
@@ -56,7 +56,7 @@ function createProcedureBinder<
 
 export function runProcedure<
     ProceduresInfo extends ProceduresBase
->(ctx: ApiServerContext, server: ApiServer<ProceduresInfo, any>, comm: Communication1): Promise<unknown> {
+>(ctx: ApiServerContext, server: ApiServer<ProceduresInfo, any>, comm: ClientCallCommunication): Promise<unknown> {
     const procedure = server[procedures]()[comm.procedure];
     return (procedure
         ? Promise.resolve(procedure.call(ctx, comm.payload, createUploadStream(), ctx))

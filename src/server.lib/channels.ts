@@ -1,4 +1,4 @@
-import {ChannelsBase, Communication3} from '../shared/communications';
+import {ChannelsBase, ClientSubscribeUnsubscribeCommunication} from '../shared/communications';
 import {ApiServerContext} from './context';
 import {ApiServer} from './apiServer';
 import {normalizeArgs, noop} from './helpers';
@@ -57,7 +57,7 @@ export function runChannelListener<
 >(
     ctx: ApiServerContext,
     server: ApiServer<any, ChannelsInfo>,
-    comm: Communication3,
+    comm: ClientSubscribeUnsubscribeCommunication,
     publish: (payload: unknown) => void
 ): () => void {
     const channelListener = server[channels]()[comm.channel];
