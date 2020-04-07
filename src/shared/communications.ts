@@ -66,6 +66,7 @@ export type Communication = CommunicationByTag<T_CLIENT | T_SERVER>;
 export function isCommunication(v: unknown): v is Communication {
     return typeof v === 'object' && v !== null && typeof (v as any).tag === 'number';
 }
+
 export function isPackedCommunication(v: unknown): v is [T_CLIENT | T_SERVER, ...any[]] {
     return Array.isArray(v) && (
         v[0] === MESSAGE
@@ -206,6 +207,11 @@ export function unpackCommunication(data: [T_CLIENT | T_SERVER, ...any[]]): void
     case SERVER_REJECT:
         if(typeof d1 === 'number') {
             return createCommunication(tag, d1, data[2]);
+        }
+        break;
+    case SERVER_PUBLISH:
+        if(typeof d1 === 'string') {
+            return createCommunication(tag, d1, d2);
         }
         break;
     case MESSAGE:
