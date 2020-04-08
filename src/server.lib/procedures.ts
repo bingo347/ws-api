@@ -59,7 +59,7 @@ export function runProcedure<
 >(ctx: ApiServerContext, server: ApiServer<ProceduresInfo, any>, comm: ClientCallCommunication): Promise<unknown> {
     const procedure = server[procedures]()[comm.procedure];
     return (procedure
-        ? Promise.resolve(procedure.call(ctx, comm.payload, createUploadStream(), ctx))
+        ? Promise.resolve().then(() => procedure.call(ctx, comm.payload, createUploadStream(), ctx))
         : Promise.reject(new Error(`Unknown procedure ${comm.procedure}`))
     );
 }
