@@ -33,7 +33,7 @@ function makeEmit<Events extends EventsBase>(eventsStore: EventsStore<Events>): 
 function addEvevntCB<Events extends EventsBase>(event: keyof Events, cb: Events[keyof Events]) {
     return (events: StoredEvents<Events>) => ({
         ...events,
-        [event]: (events[event] ? [...events[event], cb] : [cb])
+        [event]: [...(events[event] || []), cb]
     });
 }
 
