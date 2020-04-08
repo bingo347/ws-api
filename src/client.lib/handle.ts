@@ -1,4 +1,4 @@
-import {createStore, Store} from './helpers';
+import {Store, createStore, without} from './helpers';
 
 export type EventsBase = Record<string | number, (...args: any[]) => void>;
 export type Handle<Events extends EventsBase>
@@ -41,8 +41,7 @@ function removeEvevntCB<Events extends EventsBase>(event: keyof Events, cb: Even
     return (events: StoredEvents<Events>) => (!events[event]
         ? events
         : (events[event].length === 1
-            // eslint-disable-next-line fp/no-delete
-            ? ((events[event][0] === cb && delete events[event]), events)
+            ? (events[event][0] === cb ? without<StoredEvents<Events>>(event, events) : events)
             : ({
                 ...events,
                 [event]: events[event].filter(checkedCB => checkedCB !== cb)
