@@ -3,7 +3,7 @@ import {Decoder} from '../shared/msgpack-extensions';
 import {Store, createStore} from './helpers';
 import {Handle, createHandle} from './handle';
 import {OutEvents} from './connection';
-import {EVENT_MESSAGE, EVENT_OPEN} from './events';
+import {EVENT_MESSAGE, EVENT_OPEN, EVENT_ERROR} from './events';
 
 export type RecieverEvents = {
     [T in Communication['tag']]: (c: CommunicationByTag<T>) => void;
@@ -15,6 +15,7 @@ export function createReciever(handleSocket: Handle<OutEvents>, decode: Decoder)
     const queueStore = createStore<false | Communication[]>([]);
     const unpackAndEmit = makeUnpacker(makeSmartEmit(emit as Emit, queueStore));
     return (
+        handleSocket(EVENT_ERROR, () => queueStore(queue => queue || [])),
         handleSocket(EVENT_OPEN, makeQueueEmitter(emit as Emit, queueStore)),
         handleSocket(EVENT_MESSAGE, data => unpackAndEmit(decode(data))),
         handle
