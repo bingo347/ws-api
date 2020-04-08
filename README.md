@@ -232,6 +232,19 @@ type ChannelListener = <Payload>(this: ServerContext, publish: (payload: Payload
 function mountChannel<Channels extends ChannelsBase, ChannelName extends keyof Channels, S extends Server<any, Channels> = Server<any, Channels>>(server: S, channelName: ChannelName, channelListener: ChannelListener): S;
 
 function mountChannel<Channels extends ChannelsBase, ChannelName extends keyof Channels, S extends Server<any, Channels> = Server<any, Channels>>(channelName: ChannelName, channelListener: ChannelListener): (server: S) => S;
+
+// context in middleware/procedure/channel
+type ServerContext = {
+    socket: WebSocket;
+    request: IncomingMessage;
+    session: Store<Record<string | symbol, any>>;
+    handle(event: 'message', cb: (payload: unknown) => void): () => void;
+    handle(event: 'close', cb: (code: number, reason: string) => void): () => void;
+    handle(event: 'error', cb: (err: Error) => void): () => void;
+    ping(): Promise<void>;
+    send(payload: unknown): void;
+    close(code?: number, reason?: string): void;
+};
 ```
 
 ## License
