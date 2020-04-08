@@ -18,8 +18,8 @@ export function createHandle<Events extends EventsBase>(): [Handle<Events>, Emit
 
 function makeHandle<Events extends EventsBase>(eventsStore: EventsStore<Events>): Handle<Events> {
     return <K extends keyof Events>(event: K, cb: Events[K]) => (
-        eventsStore(addEvevntCB(event, cb)),
-        () => void eventsStore(removeEvevntCB(event, cb))
+        eventsStore(addEventCB(event, cb)),
+        () => void eventsStore(removeEventCB(event, cb))
     );
 }
 
@@ -30,14 +30,14 @@ function makeEmit<Events extends EventsBase>(eventsStore: EventsStore<Events>): 
     };
 }
 
-function addEvevntCB<Events extends EventsBase>(event: keyof Events, cb: Events[keyof Events]) {
+function addEventCB<Events extends EventsBase>(event: keyof Events, cb: Events[keyof Events]) {
     return (events: StoredEvents<Events>) => ({
         ...events,
         [event]: [...(events[event] || []), cb]
     });
 }
 
-function removeEvevntCB<Events extends EventsBase>(event: keyof Events, cb: Events[keyof Events]) {
+function removeEventCB<Events extends EventsBase>(event: keyof Events, cb: Events[keyof Events]) {
     return (events: StoredEvents<Events>) => (!events[event]
         ? events
         : (events[event].length === 1
