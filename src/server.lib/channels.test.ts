@@ -1,4 +1,4 @@
-import {mountChannel, Channels, ChannelListener} from './channels';
+import {mountChannel, ChannelListener} from './channels';
 import {ApiServer} from './apiServer';
 import {createStore} from './helpers';
 import {middlewares, procedures, channels} from './symbols';
@@ -13,15 +13,12 @@ type ChannelsInfo = {
     channel2: PayloadFromChannel<typeof channel2>;
 };
 
-function createFakeServer(): ApiServer<any, Channels<ChannelsInfo>> {
+function createFakeServer() {
     return {
-        [middlewares]: createStore([]),
-        [procedures]: createStore(void 0),
-        [channels]: createStore({}),
-        close() {
-            return Promise.resolve();
-        }
-    };
+        [middlewares]: void 0,
+        [procedures]: void 0,
+        [channels]: createStore({})
+    } as any as ApiServer<any, ChannelsInfo>;
 }
 
 test('mountChannel return given ApiServer instance', () => {

@@ -1,4 +1,4 @@
-import {mountProcedure, Procedures} from './procedures';
+import {mountProcedure} from './procedures';
 import {ApiServer} from './apiServer';
 import {createStore} from './helpers';
 import {middlewares, procedures, channels} from './symbols';
@@ -11,15 +11,12 @@ type ProceduresInfo = {
     procedure2: [Parameters<typeof procedure2>[0], ReturnType<typeof procedure2>];
 };
 
-function createFakeServer(): ApiServer<Procedures<ProceduresInfo>, any> {
+function createFakeServer() {
     return {
-        [middlewares]: createStore([]),
+        [middlewares]: void 0,
         [procedures]: createStore({}),
-        [channels]: createStore(void 0),
-        close() {
-            return Promise.resolve();
-        }
-    };
+        [channels]: void 0
+    } as any as ApiServer<ProceduresInfo, any>;
 }
 
 test('mountProcedure return given ApiServer instance', () => {

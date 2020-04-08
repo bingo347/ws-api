@@ -3,15 +3,12 @@ import {ApiServer} from './apiServer';
 import {createStore} from './helpers';
 import {middlewares, procedures, channels} from './symbols';
 
-function createFakeServer(): ApiServer<any, any> {
+function createFakeServer() {
     return {
         [middlewares]: createStore([]),
-        [procedures]: createStore(void 0),
-        [channels]: createStore(void 0),
-        close() {
-            return Promise.resolve();
-        }
-    };
+        [procedures]: void 0,
+        [channels]: void 0
+    } as any as ApiServer<any, any>;
 }
 
 test('useMiddleware return given ApiServer instance', () => {
