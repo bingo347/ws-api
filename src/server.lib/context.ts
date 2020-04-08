@@ -39,6 +39,8 @@ export function makeNewContextListener<
     decode: Decoder
 ) {
     return (socket: WebSocket, request: IncomingMessage) => {
+        // eslint-disable-next-line fp/no-mutation
+        socket.binaryType = 'arraybuffer';
         const emitter = new EventEmitter();
         const sender = createSender(socket, encode);
         const ctx = createContext(socket, request, sender, emitter);
