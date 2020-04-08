@@ -8,6 +8,7 @@ import {
     createCommunication,
     isPackedCommunication,
     unpackCommunication,
+    packCommunication,
     MESSAGE
 } from '../shared/communications';
 import {Encoder, Decoder} from '../shared/msgpack-extensions';
@@ -44,8 +45,9 @@ export function makeNewContextListener<
         const emitter = new EventEmitter();
         const sender = createSender(socket, encode);
         const ctx = createContext(socket, request, sender, emitter);
-        return (connectSocket(apiServer, socket, decode, emitter)
-            .once('open', createContextRunner(ctx, emitter, apiServer))
+        return (
+            connectSocket(apiServer, socket, decode, emitter),
+            process.nextTick(createContextRunner(ctx, emitter, apiServer))
         );
     };
 }
@@ -66,8 +68,8 @@ function createContext(
     };
 }
 
-function createSender(socket: WebSocket, encode: (value: unknown) => Uint8Array) {
-    return (data: Communication) => socket.send(encode(data));
+function createSender(socket: WebSocket, encode: Encoder) {
+    return (data: Communication) => socket.send(encode(packCommunication(data)));
 }
 
 function makeHandle(emitter: EventEmitter) {

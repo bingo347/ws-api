@@ -11,7 +11,7 @@ import {
 type Fn<Args extends any[] = []> = (...args: Args) => void;
 
 export type InEvents = {
-    [EVENT_SEND]: (data: ArrayBufferView) => void;
+    [EVENT_SEND]: (data: ArrayBufferLike) => void;
     [EVENT_CLOSE]: CloseFn;
 };
 export type OutEvents = {
@@ -39,7 +39,7 @@ function connect(url: string, inHandle: Handle<InEvents>, outEmit: Emit<OutEvent
     const socket = new WebSocket(url);
     // eslint-disable-next-line fp/no-mutation
     socket.binaryType = 'arraybuffer';
-    const unhandleSend = inHandle(EVENT_SEND, data => socket.send(data.buffer));
+    const unhandleSend = inHandle(EVENT_SEND, data => socket.send(data));
     const unhandleClose = inHandle(EVENT_CLOSE, closeFromSocket(socket));
     const reconnect = () => (unhandleSend(), unhandleClose(), connect(url, inHandle, outEmit));
     const silentClose = subscribeClose(socket, outEmit, reconnect);

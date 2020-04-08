@@ -1,6 +1,6 @@
 import {PatchedExtensionCodec, defaultExtensionCodec, createEncoder, createDecoder} from '../shared/msgpack';
 import {Encoder} from '../shared/msgpack-extensions';
-import {ProceduresBase, ChannelsBase} from '../shared/communications';
+import {ProceduresBase, ChannelsBase, packCommunication} from '../shared/communications';
 import {Handle, Emit, createHandle} from './handle';
 import {OutEvents, InEvents, createConnection} from './connection';
 import {CloseFn, closeFromEmit} from './close';
@@ -46,7 +46,7 @@ function createPublicHandle(handleSocket: Handle<OutEvents>): Handle<PublicEvent
 }
 
 function createSender(emitToSocket: Emit<InEvents>, encode: Encoder): Sender {
-    return data => emitToSocket(EVENT_SEND, encode(data));
+    return data => emitToSocket(EVENT_SEND, encode(packCommunication(data)));
 }
 
 function extractExtensionCodec(options: ApiClientOptions): PatchedExtensionCodec {
