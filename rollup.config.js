@@ -1,4 +1,6 @@
 import tsPlugin from '@wessberg/rollup-plugin-ts';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 
 export default [{
     input: 'src/server.ts',
@@ -25,12 +27,8 @@ export default [{
     output: {
         file: 'client.umd-es5.js',
         format: 'umd',
-        name: 'wsApi',
-        globals: {
-            '@msgpack/msgpack': 'msgpack'
-        }
+        name: 'wsApi'
     },
-    external: ['@msgpack/msgpack'],
     plugins: [
         tsPlugin({
             tsconfig: conf => ({
@@ -38,6 +36,8 @@ export default [{
                 target: 'ES5',
                 downlevelIteration: true
             })
-        })
+        }),
+        resolve(),
+        commonjs()
     ]
 }];
