@@ -1,10 +1,9 @@
 import {Communication, CommunicationByTag, isPackedCommunication, unpackCommunication} from '../shared/communications';
 import {Decoder} from '../shared/msgpack-extensions';
-import {createStore} from './helpers';
+import {Store, createStore} from './helpers';
 import {Handle, createHandle} from './handle';
 import {OutEvents} from './connection';
 import {EVENT_MESSAGE, EVENT_OPEN} from './events';
-import {Store} from 'src/shared/helpers';
 
 export type RecieverEvents = {
     [T in Communication['tag']]: (c: CommunicationByTag<T>) => void;
