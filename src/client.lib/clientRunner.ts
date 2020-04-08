@@ -121,7 +121,7 @@ function addSubscriber(sender: Sender, subscribersStore: Store<SubscribersRecord
 }
 
 function removeSubscriber(sender: Sender, subscribersStore: Store<SubscribersRecord>, channelName: string, cb: Subscriber) {
-    return subscribersStore(subscribers => (!subscribers[channelName]
+    return void subscribersStore(subscribers => (!subscribers[channelName]
         ? subscribers
         : (subscribers[channelName].length === 1
             ? (subscribers[channelName][0] === cb
