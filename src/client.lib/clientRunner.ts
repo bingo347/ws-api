@@ -11,7 +11,9 @@ import {
     MESSAGE,
     PING,
     PONG,
-    SERVER_PUBLISH
+    SERVER_PUBLISH,
+    CLIENT_SUBSCRIBE,
+    CLIENT_UNSUBSCRIBE
 } from '../shared/communications';
 import {RecieverEvents} from './reciever';
 import {CloseFn} from './close';
@@ -82,8 +84,8 @@ function makeSubscribe<ChannelsInfo extends ChannelsBase>(sender: Sender, reciev
     return (
         reciever(SERVER_PUBLISH, runSubscribers(subscribersStore)),
         (channelName, cb) => (
-            addSubscriber(subscribersStore, channelName, cb),
-            () => removeSubscriber(subscribersStore, channelName, cb)
+            addSubscriber(sender, subscribersStore, channelName, cb),
+            () => removeSubscriber(sender, subscribersStore, channelName, cb)
         )
     );
 }
@@ -108,18 +110,24 @@ function runSubscribers(subscribersStore: Store<SubscribersRecord>) {
     ).forEach(cb => cb(comm.payload));
 }
 
-function addSubscriber(subscribersStore: Store<SubscribersRecord>, channelName: string, cb: Subscriber) {
+function addSubscriber(sender: Sender, subscribersStore: Store<SubscribersRecord>, channelName: string, cb: Subscriber) {
     return subscribersStore(subscribers => ({
         ...subscribers,
-        [channelName]: [...(subscribers[channelName] || []), cb]
+        [channelName]: (subscribers[channelName]
+            ? [...subscribers[channelName], cb]
+            : (sender(createCommunication(CLIENT_SUBSCRIBE, channelName)), [cb])
+        )
     }));
 }
 
-function removeSubscriber(subscribersStore: Store<SubscribersRecord>, channelName: string, cb: Subscriber) {
+function removeSubscriber(sender: Sender, subscribersStore: Store<SubscribersRecord>, channelName: string, cb: Subscriber) {
     return subscribersStore(subscribers => (!subscribers[channelName]
         ? subscribers
         : (subscribers[channelName].length === 1
-            ? (subscribers[channelName][0] === cb ? without(channelName, subscribers) : subscribers)
+            ? (subscribers[channelName][0] === cb
+                ? (sender(createCommunication(CLIENT_UNSUBSCRIBE, channelName)), without(channelName, subscribers))
+                : subscribers
+            )
             : ({
                 ...subscribers,
                 [channelName]: subscribers[channelName].filter(checkedCB => checkedCB !== cb)
