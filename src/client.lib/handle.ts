@@ -1,6 +1,6 @@
 import {createStore, Store} from './helpers';
 
-export type EventsBase = Record<string, (...args: any[]) => void>;
+export type EventsBase = Record<string | number, (...args: any[]) => void>;
 export type Handle<Events extends EventsBase>
     = <K extends keyof Events>(event: K, cb: Events[K]) => (() => void);
 export type Emit<Events extends EventsBase>
