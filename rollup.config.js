@@ -35,7 +35,8 @@ export default [{
         tsPlugin({
             tsconfig: conf => ({
                 ...conf,
-                target: 'ES5'
+                target: 'ES5',
+                downlevelIteration: true
             })
         })
     ]
