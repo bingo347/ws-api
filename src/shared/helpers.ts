@@ -10,7 +10,7 @@ export function createStore<T>(initValue: T) {
     function store(updater?: (value: T) => T): T | Store<T> {
         return (updater
             // eslint-disable-next-line fp/no-mutation
-            ? (value = updater(value))
+            ? ((value = updater(value)), store)
             : value
         );
     }
