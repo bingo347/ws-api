@@ -7,6 +7,8 @@ import {
     EVENT_ERROR,
     EVENT_MESSAGE
 } from './events';
+import {createStore} from './helpers';
+import { Store } from 'src/shared/helpers';
 
 type Fn<Args extends any[] = []> = (...args: Args) => void;
 
@@ -39,19 +41,26 @@ function connect(url: string, inHandle: Handle<InEvents>, outEmit: Emit<OutEvent
     const socket = new WebSocket(url);
     // eslint-disable-next-line fp/no-mutation
     socket.binaryType = 'arraybuffer';
-    const unhandleSend = inHandle(EVENT_SEND, data => socket.send(data));
+    const queueStore = createStore<false | ArrayBufferLike[]>([]);
+    const unhandleSend = inHandle(EVENT_SEND, data => queueStore(queue => (queue ? [...queue, data] : (socket.send(data), queue))));
     const unhandleClose = inHandle(EVENT_CLOSE, closeFromSocket(socket));
-    const reconnect = () => (unhandleSend(), unhandleClose(), connect(url, inHandle, outEmit));
+    const reconnect = () => (queueStore(queue => queue || []), unhandleSend(), unhandleClose(), connect(url, inHandle, outEmit));
     const silentClose = subscribeClose(socket, outEmit, reconnect);
     return (
-        subscribeOpen(socket, outEmit),
+        subscribeOpen(socket, outEmit, queueStore),
         subscribeError(socket, outEmit, silentClose),
         subscribeMessage(socket, outEmit)
     );
 }
 
-function subscribeOpen(socket: WebSocket, outEmit: Emit<OutEvents>) {
-    return subscribeEvent(socket, EVENT_OPEN, () => outEmit(EVENT_OPEN), true);
+function subscribeOpen(socket: WebSocket, outEmit: Emit<OutEvents>, queueStore: Store<false | ArrayBufferLike[]>) {
+    return subscribeEvent(socket, EVENT_OPEN, () => (
+        queueStore(queue => (
+            (queue && queue.forEach(data => socket.send(data))),
+            false
+        )),
+        outEmit(EVENT_OPEN)
+    ), true);
 }
 function subscribeClose(socket: WebSocket, outEmit: Emit<OutEvents>, reconnect: Fn) {
     const unsubscribeClose = subscribeEvent(socket, EVENT_CLOSE, e => (e.wasClean
