@@ -44,7 +44,7 @@ function connect(url: string, inHandle: Handle<InEvents>, outEmit: Emit<OutEvent
     const queueStore = createStore<false | ArrayBufferLike[]>([]);
     const unhandleSend = inHandle(EVENT_SEND, data => queueStore(queue => (queue ? [...queue, data] : (socket.send(data), queue))));
     const unhandleClose = inHandle(EVENT_CLOSE, closeFromSocket(socket));
-    const reconnect = () => (queueStore(queue => queue || []), unhandleSend(), unhandleClose(), connect(url, inHandle, outEmit));
+    const reconnect = () => (unhandleSend(), unhandleClose(), connect(url, inHandle, outEmit));
     const silentClose = subscribeClose(socket, outEmit, reconnect);
     return (
         subscribeOpen(socket, outEmit, queueStore),
