@@ -3,7 +3,6 @@ export type Store<T> = {
     (updater: (value: T) => T): Store<T>;
 };
 export function createStore<T>(initValue: T) {
-    // eslint-disable-next-line immutable/no-let
     let value = initValue;
     function store(): T;
     function store(updater: (value: T) => T): Store<T>;

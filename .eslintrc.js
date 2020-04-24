@@ -12,7 +12,6 @@ module.exports = {
         '@typescript-eslint',
         'array-func',
         'fp',
-        'immutable',
         'promise',
         'jest',
         'eslint-comments'
@@ -140,10 +139,6 @@ module.exports = {
         'fp/no-nil': 2,
         'fp/no-this': 2,
         'fp/no-throw': 2,
-        // immutable
-        'immutable/no-mutation': 0,
-        'immutable/no-let': 2,
-        'immutable/no-this': 0,
         // promise
         'promise/catch-or-return': 2,
         'promise/param-names': 2,

@@ -108,7 +108,6 @@ function createMessageListener(decode: Decoder, emitter: EventEmitter) {
 }
 
 function emitOnce(emitter: EventEmitter, event: string) {
-    // eslint-disable-next-line immutable/no-let
     let emitted = false;
     return (...args: unknown[]) => {
         if(emitted) { return void 0; }
