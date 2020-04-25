@@ -16,9 +16,9 @@ npm install --save ws-api@alpha
 yarn add ws-api@alpha
 ```
 
-## What's new in version 2?
+## What's new in version 2
 
-- Rewrited to TypeScript and has better types
+- Rewritten to TypeScript and has better types
 - Server library redesigned for write reusable & testable api
 - Client library redesigned for small size & better tree shaking
 - Changed msgpack dependency
@@ -51,18 +51,18 @@ import {Procedures, Channels} from './types.ts';
 // you can declare any middleware, procedure or channel without server
 // and attach it later
 const middleware1 = useMiddleware(ctx => {
-    ctx.handle('error', err => console.log(`Ooops... ${err}`));
+    ctx.handle('error', err => console.log(`Oops... ${err}`));
 });
 const middleware2 = useMiddleware(() => {
     // if middleware return Promise
-    // next middlewares and all communications wait it
+    // next middleware and all communications wait it
     return new Promise(resolve => setTimeout(resolve, 500));
 });
 
 // create server on port 3000
 const server = createServer<Procedures, Channels>({port: 3000});
 
-// attach middlewares to server:
+// attach middleware to server:
 middleware1(server);
 middleware2(server);
 
@@ -122,7 +122,7 @@ api.call('testReject').catch(err => {
 // all api methods is context free
 const {subscribe, handle, close} = api;
 
-// subscribe returns it's unsubscriber
+// subscribe returns it's unsubscribe
 const unsubscribe = subscribe('counterChannel', counter => {
     // logs next number every second (does your network work perfectly?)
     console.log(counter);
@@ -137,7 +137,7 @@ handle('close', (code, reason) => {
     console.log(`Socket closed with ${code} because ${reason}`);
 });
 
-// or close socket manualy:
+// or close socket manually:
 setTimeout(() => {
     const NORMAL_CLOSE_WS_CODE = 1000;
     close(NORMAL_CLOSE_WS_CODE, 'Manual close');
@@ -211,7 +211,7 @@ type Server<Procedures extends ProceduresBase, Channels extends ChannelsBase> = 
 // create server & listen port
 function createServer<Procedures extends ProceduresBase, Channels extends ChannelsBase>(options?: ServerOptions): Server<Procedures, Channels>;
 
-// middlewares
+// middleware
 type Middleware = (this: ServerContext, context: ServerContext) => void | Promise<void>;
 
 function useMiddleware<S extends Server<any, any>>(server: S, middleware: Middleware): S;
