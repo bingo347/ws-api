@@ -6,6 +6,8 @@ export type Store<T> = {
 };
 export type Fn<Args extends any[] = any[], Result extends any = any> = (...args: Args) => Result;
 export type VoidFn<Args extends any[] = any[]> = Fn<Args, void>;
+export type Key = string | number | symbol;
+export type Keys<T extends Record<Key, any>, Without extends Key = never> = Exclude<keyof T, Without>;
 
 export const noop: VoidFn = () => void 0;
 export const identity = <T>(x: T) => x;
