@@ -69,6 +69,10 @@ export function pipe(fn: Fn, ...fns: Fn<[any]>[]) {
     return (...args: any[]) => piped(fn(...args));
 }
 
+export function withEffect<T>(f: VoidFn<[T]>): Fn<[T], T> {
+    return v => (f(v), v);
+}
+
 export function without<T extends Record<string | number, any>>(key: keyof T, obj: T): T {
     const keys = Object.keys(obj).filter(k => k !== key);
     return keys.reduce((acc, k) => ({
