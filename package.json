@@ -31,6 +31,7 @@
   },
   "homepage": "https://github.com/bingo347/ws-api#readme",
   "dependencies": {
+    "@lambda-fn/cell": "^1.0.3",
     "@msgpack/msgpack": "^1.12.0",
     "ws": "^7.2.3"
   },

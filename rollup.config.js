@@ -8,7 +8,7 @@ export default [{
         file: 'server.js',
         format: 'cjs'
     },
-    external: ['events', 'ws', '@msgpack/msgpack'],
+    external: ['events', 'ws', '@msgpack/msgpack', '@lambda-fn/cell'],
     plugins: [
         tsPlugin()
     ]
@@ -18,7 +18,7 @@ export default [{
         file: 'client.js',
         format: 'es'
     },
-    external: ['@msgpack/msgpack'],
+    external: ['@msgpack/msgpack', '@lambda-fn/cell'],
     plugins: [
         tsPlugin()
     ]

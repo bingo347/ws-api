@@ -1,21 +1,9 @@
+import {makeCell, get, update} from '@lambda-fn/cell';
+
 export type Store<T> = {
     (): T;
     (updater: (value: T) => T): Store<T>;
 };
-export function createStore<T>(initValue: T) {
-    let value = initValue;
-    function store(): T;
-    function store(updater: (value: T) => T): Store<T>;
-    function store(updater?: (value: T) => T): T | Store<T> {
-        return (updater
-            // eslint-disable-next-line fp/no-mutation
-            ? ((value = updater(value)), store)
-            : value
-        );
-    }
-    return store;
-}
-
 export type Fn<Args extends any[] = any[], Result extends any = any> = (...args: Args) => Result;
 
 export const noop = () => void 0;
@@ -75,4 +63,17 @@ export function pipe<
 export function pipe(fn: Fn, ...fns: Fn<[any]>[]) {
     const piped = fns.reduce((prev, curr) => x => curr(prev(x)), identity);
     return (...args: any[]) => piped(fn(...args));
+}
+
+export function createStore<T>(initValue: T) {
+    const cell = makeCell(initValue);
+    function store(): T;
+    function store(updater: (value: T) => T): Store<T>;
+    function store(updater?: (value: T) => T): T | Store<T> {
+        return (updater
+            ? (update(cell, updater), store)
+            : get(cell)
+        );
+    }
+    return store;
 }
