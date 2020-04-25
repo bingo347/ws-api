@@ -9,7 +9,8 @@ export type VoidFn<Args extends any[] = any[]> = Fn<Args, void>;
 export type Key = string | number | symbol;
 export type Keys<T extends Record<Key, any>, Without extends Key = never> = Exclude<keyof T, Without>;
 
-export const noop: VoidFn = () => void 0;
+export const VOID: void = void 0;
+export const noop: VoidFn = () => VOID;
 export const identity = <T>(x: T) => x;
 
 export function partial<T0, TS extends any[], R>(
