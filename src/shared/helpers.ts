@@ -65,6 +65,14 @@ export function pipe(fn: Fn, ...fns: Fn<[any]>[]) {
     return (...args: any[]) => piped(fn(...args));
 }
 
+export function without<T extends Record<string | number, any>>(key: keyof T, obj: T): T {
+    const keys = Object.keys(obj).filter(k => k !== key);
+    return keys.reduce((acc, k) => ({
+        ...acc,
+        [k]: obj[k]
+    }), {} as T);
+}
+
 export function createStore<T>(initValue: T) {
     const cell = makeCell(initValue);
     function store(): T;
