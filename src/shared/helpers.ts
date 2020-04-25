@@ -5,8 +5,9 @@ export type Store<T> = {
     (updater: (value: T) => T): Store<T>;
 };
 export type Fn<Args extends any[] = any[], Result extends any = any> = (...args: Args) => Result;
+export type VoidFn<Args extends any[] = any[]> = Fn<Args, void>;
 
-export const noop = () => void 0;
+export const noop: VoidFn = () => void 0;
 export const identity = <T>(x: T) => x;
 
 export function partial<T0, TS extends any[], R>(
