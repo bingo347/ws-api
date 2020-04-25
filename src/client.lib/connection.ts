@@ -8,7 +8,7 @@ import {
     EVENT_MESSAGE
 } from './events';
 import {createStore} from './helpers';
-import { Store } from 'src/shared/helpers';
+import { Store } from '../shared/utils';
 
 type Fn<Args extends any[] = []> = (...args: Args) => void;
 

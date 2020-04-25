@@ -1,7 +1,7 @@
 import {ApiServer} from './apiServer';
 import {middlewares, procedures, channels} from './symbols';
 
-export * from '../shared/helpers';
+export * from '../shared/utils';
 
 export function isApiServer(s: unknown): s is ApiServer<any, any> {
     return (typeof s === 'object'
